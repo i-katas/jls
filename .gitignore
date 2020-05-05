@@ -1,0 +1,11 @@
+.idea
+*.iml
+classes
+out
+target
+
+.gradle
+build
+
+*.swp
+todos
