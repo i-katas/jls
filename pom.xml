@@ -35,9 +35,18 @@
                 <configuration>
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
-                    <release>${jdk.version}</release>
                     <showWarnings>true</showWarnings>
-                    <failOnWarning>true</failOnWarning>
+                    <compilerArgs>
+                        <arg>--add-exports=java.base/jdk.internal.loader=ALL-UNNAMED</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <argLine>--add-exports=java.base/jdk.internal.loader=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
         </plugins>
