@@ -7,17 +7,20 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.WrongMethodTypeException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ikatas.util.DirectClassLoader.directClassLoader;
 import static java.lang.invoke.MethodHandles.*;
 import static java.lang.invoke.MethodType.methodType;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
 public class MethodHandleTest {
@@ -140,6 +143,18 @@ public class MethodHandleTest {
         String result = (String) Invoker.invokeHandle().invokeExact(new Invoker());
 
         assertThat(result, equalTo("success"));
+    }
+
+    @Test
+    public void constructsSymbolicTypeDescriptorWhichContainsGenericTypeWillReplaceByTheirErasures() throws Throwable {
+        List<List<Integer>> numbers = new ArrayList<>();
+        MethodHandle addInvoker = lookup.findVirtual(List.class, "add", methodType(boolean.class, Object.class)).asType(methodType(boolean.class, List.class, List.class));
+
+        //symbolic type descriptor: (Ljava/util/List;)Z
+        boolean success = (boolean) addInvoker.invokeExact(numbers, asList(1, 2, 3));
+
+        assertTrue(true);
+        assertThat(numbers, contains(asList(1, 2, 3)));
     }
 
     private List<String> invocationStackOf(Exception exception) {
